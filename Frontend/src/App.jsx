@@ -1,11 +1,29 @@
 import React from 'react'
+import {BrowserRouter, Route, Routes } from "react-router-dom"
+import Home from './pages/Home'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import Navbar from './components/Navbar'
+import LogIn from './pages/LogIn'
+import Register from './pages/Register'
+import Error from './pages/Error'
+import Footer from './components/Footer'
 
 const App = () => {
   return (
     <>
-      <h1 class="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+     <BrowserRouter>
+     <Navbar/>
+     <Routes>
+      <Route path='/' element={<Home/>}/>
+      <Route path='/about' element={<About/>}/>
+      <Route path='/contact' element={<Contact/>}/>
+      <Route path='/login' element={<LogIn/>}/>
+      <Route path='/register' element={<Register/>}/>
+      <Route path='*' element={<Error/>}/>
+     </Routes>
+     <Footer/>
+     </BrowserRouter>
     </>
   )
 }
