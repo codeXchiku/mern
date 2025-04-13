@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from "react-router";
+import { useAuth } from '../store/Auth';
+
 
 const LogIn = () => {
+
     const [loginData, setLoginData] = useState({
         email: "",
         password: ""
     })
+    let navigate = useNavigate();
+    const {storeTokenInLS} = useAuth()
 
     const handleInput = (e) => {
         const name = e.target.name;
@@ -16,16 +23,26 @@ const LogIn = () => {
         })
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        console.log(loginData)
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-        // Clear the form fields by resetting the state
-        setLoginData({
-            email: "",
-            password: ""
-        });
-    }
+        try {
+            const res = await axios.post("http://localhost:3000/api/auth/login", loginData);
+
+            if (res.status == 200) {
+                //console.log(res.data.token)
+                storeTokenInLS(res.data.token)
+
+                setLoginData({
+                    email: "",
+                    password: ""
+                });
+                navigate("/");
+            }
+        } catch (error) {
+            console.error("Invalid credentials: ", error);
+        }
+    };
 
 
     return (

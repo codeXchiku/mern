@@ -3,11 +3,13 @@ import authRoute from './router/auth-routes.js';
 import contactRoute from './router/contat-router.js';
 import connectDb from './utils/db.js';
 import errorMiddleWare from './middleware/error-middleware.js';
+import cors from 'cors'
 
 const app = express();
 const port = 3000;
 
 // Middleware
+app.use(cors())
 app.use(express.json());
 
 // Routes

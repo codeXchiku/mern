@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import axios from 'axios'
+import { useNavigate } from "react-router";
 
 const Register = () => {
+    let navigate = useNavigate();
+    
     const[user,setUser] = useState({
         username:"",
         email:"",
@@ -18,18 +22,25 @@ const Register = () => {
            })
     }
 
-    const handleSubmit = (e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(user);
-
-        setUser({
-            username:"",
-            email:"",
-            phone:"",
-            password:""
-        })
-    }
-
+        
+        try {
+            const res = await axios.post("http://localhost:3000/api/auth/register", user);
+            if(res.status==201){
+                setUser({
+                username: "",
+                email: "",
+                phone: "",
+                password: ""
+            });
+            navigate("/login");
+            }
+        } catch (error) {
+            console.error("Registration failed:", error.response?.data || error.message);
+        }
+    };
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
             <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md">
