@@ -1,30 +1,38 @@
-import {  createContext,useContext } from "react";
+import { createContext, useContext, useState } from "react";
 
 // 1.context
 const AuthContext = createContext();
 
 //2.provider
- export const AuthProvider = ({children}) => {
+export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState(localStorage.getItem("token"))
 
-    const storeTokenInLS = (jwtToken)=>{
-        return localStorage.setItem("token",jwtToken)
-    }
-    
-   return (
-     <AuthContext.Provider value={{storeTokenInLS}}>
-        {children}
-     </AuthContext.Provider>
-   )
- }
+  const storeTokenInLS = (jwtToken) => {
+    setToken(jwtToken);
+    return localStorage.setItem("token", jwtToken)
+  }
 
- //3.For consumer(custom Hook)
+  const isLoggedIn = !!token;
 
- export const useAuth = ()=>{
-    const authContextValue = useContext(AuthContext)
-    if (!authContextValue) {
-        throw new Error("useAuth is used out side of the provider")
-    }
-    return authContextValue;
- }
+  const logoutUser = () => {
+    setToken("");
+    localStorage.removeItem("token")
+  }
 
-  
+  return (
+    <AuthContext.Provider value={{ storeTokenInLS, logoutUser, isLoggedIn }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+//3.For consumer(custom Hook)
+
+export const useAuth = () => {
+  const authContextValue = useContext(AuthContext)
+  if (!authContextValue) {
+    throw new Error("useAuth is used out side of the provider")
+  }
+  return authContextValue;
+}
+

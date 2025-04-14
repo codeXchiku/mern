@@ -1,7 +1,9 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
+import { useAuth } from '../store/Auth';
 
 const Navbar = () => {
+    const {isLoggedIn} = useAuth();
     return (
         <nav className="flex items-center justify-between bg-black text-white px-6 py-4 shadow-md">
             <div className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500 animate-gradient-x">
@@ -44,6 +46,19 @@ const Navbar = () => {
                         Contact
                     </NavLink>
                 </li>
+                {isLoggedIn?<li>
+                    <NavLink
+                        to={'/logout'}
+                        className={({ isActive }) =>
+                            isActive
+                                ? "text-green-400 font-semibold drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]"
+                                : "text-white hover:text-pink-400 hover:drop-shadow-[0_0_6px_rgba(236,72,153,0.6)]"
+                        }
+                    >
+                        logout
+                    </NavLink>
+                </li>:
+                <>
                 <li>
                     <NavLink
                         to={'/login'}
@@ -68,6 +83,9 @@ const Navbar = () => {
                         Register
                     </NavLink>
                 </li>
+                </>
+                }
+                
             </ul>
         </nav>
     );
