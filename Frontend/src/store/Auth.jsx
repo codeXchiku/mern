@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import axios from 'axios'
 
 // 1.context
 const AuthContext = createContext();
@@ -6,6 +7,7 @@ const AuthContext = createContext();
 //2.provider
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"))
+  const[user,setUser] = useState("")
 
   const storeTokenInLS = (jwtToken) => {
     setToken(jwtToken);
@@ -13,14 +15,34 @@ export const AuthProvider = ({ children }) => {
   }
 
   const isLoggedIn = !!token;
+  console.log("isLoggedIn: " ,isLoggedIn);
+  
 
   const logoutUser = () => {
     setToken("");
     localStorage.removeItem("token")
   }
+  
+  //jwt authentication -> to get the currently loggedin user data
+const userAuthentication = async()=>{
+  try {
+    const response = await axios.get("http://localhost:3000/api/auth/user", {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      },
+    });
+    setUser(response.data.userData)
+  } catch (error) {
+    console.log("user data not found: ",error);
+  }  
+}
+
+useEffect(()=>{
+  userAuthentication()
+},[])
 
   return (
-    <AuthContext.Provider value={{ storeTokenInLS, logoutUser, isLoggedIn }}>
+    <AuthContext.Provider value={{ storeTokenInLS, logoutUser, isLoggedIn,user }}>
       {children}
     </AuthContext.Provider>
   )

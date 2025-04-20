@@ -1,31 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../store/Auth';
 
 const Contact = () => {
-  const[contactData,setContactData] = useState({
-    username:"",
-    email:"",
-    message:""
-  })
+  const [contactData, setContactData] = useState({
+    username: "",
+    email: "",
+    message: ""
+  });
+  
+  const { user } = useAuth();
 
-  const handleInput = (e)=>{
-    const name = e.target.name;
-    const value = e.target.value;
+  // Use useEffect to handle the auto-fill when user changes
+  useEffect(() => {
+    if (user) {
+      setContactData(prev => ({
+        ...prev,
+        username: user.username || "",
+        email: user.email || ""
+      }));
+    }
+  }, [user]); // Only run when user changes
 
+  const handleInput = (e) => {
+    const { name, value } = e.target;
+    setContactData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(contactData);
     setContactData({
-      ...contactData,
-      [name]:value,
-    })
-  }
- const handleSubmit = (e)=>{
-  e.preventDefault()
-  console.log(contactData);
-
-  setContactData({
-    username:"",
-    email:"",
-    message:""
-  })
- }
+      username: "",
+      email: "",
+      message: ""
+    });
+  };
+ 
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
