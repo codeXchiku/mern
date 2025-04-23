@@ -7,7 +7,7 @@ const AuthContext = createContext();
 //2.provider
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"))
-  const[user,setUser] = useState("")
+  const[user,setUser] = useState(null)
 
   const storeTokenInLS = (jwtToken) => {
     setToken(jwtToken);
@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
   const logoutUser = () => {
     setToken("");
     localStorage.removeItem("token")
+    setUser(null)
   }
   
   //jwt authentication -> to get the currently loggedin user data
@@ -37,9 +38,13 @@ const userAuthentication = async()=>{
   }  
 }
 
-useEffect(()=>{
-  userAuthentication()
-},[])
+useEffect(() => {
+  if (token) {
+    userAuthentication();
+  } else {
+    setUser(null);
+  }
+}, [token]);
 
   return (
     <AuthContext.Provider value={{ storeTokenInLS, logoutUser, isLoggedIn,user }}>
