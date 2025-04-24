@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../store/Auth';
+import axios from 'axios';
 
 const Contact = () => {
   const [contactData, setContactData] = useState({
@@ -7,7 +8,7 @@ const Contact = () => {
     email: "",
     message: ""
   });
-  
+
   const { user } = useAuth();
 
   // Use useEffect to handle the auto-fill when user changes
@@ -29,16 +30,20 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(contactData);
-    setContactData({
-      username: "",
-      email: "",
-      message: ""
-    });
+    try {
+      const res = await axios.post("http://localhost:3000/api/form/contact", contactData);
+      if (res.status == 200) {
+        setContactData({
+          message: ""
+        });
+      }
+    } catch (error) {
+      console.log("contact submit: ",error);
+    }
   };
- 
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
