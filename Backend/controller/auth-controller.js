@@ -27,7 +27,7 @@ const Home = async(req, res) => {
         const userExsit =await User.findOne({email:email});
 
         if (userExsit) {
-            return res.status(400).json({msg:"email already exists"})
+            return res.status(400).json({extraDetails:"email already exists"})
         }
 
         const newUser = await User.create({username,email,phone,password})
@@ -48,7 +48,7 @@ const Home = async(req, res) => {
         const{email,password} = req.body;
         const userExist = await User.findOne({email:email});
         if (!userExist) {
-            return res.status(500).json("email not registered yet")
+            return res.status(500).json({extraDetails:"email not registered yet"})
         }
 
         const isPasswordValid = await userExist.isPasswordValid(password);
@@ -60,7 +60,7 @@ const Home = async(req, res) => {
                 userId:userExist._id.toString()
             })
         }else{
-            res.status(401).json({msg:"Invalid email or password"})
+            res.status(401).json({extraDetails:"Invalid email or password"})
         }
         
     } catch (error) {

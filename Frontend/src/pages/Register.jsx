@@ -1,44 +1,54 @@
 import React, { useState } from 'react';
 import axios from 'axios'
 import { useNavigate } from "react-router";
+import { useAuth } from '../store/Auth';
+import { toast } from 'react-toastify';
 
 const Register = () => {
     let navigate = useNavigate();
-    
-    const[user,setUser] = useState({
-        username:"",
-        email:"",
-        phone:"",
-        password:""
+
+    const [user, setUser] = useState({
+        username: "",
+        email: "",
+        phone: "",
+        password: ""
     })
 
-    const handleInput=(e)=>{
+    const { storeTokenInLS } = useAuth();
+
+    const handleInput = (e) => {
         const name = e.target.name;
         const value = e.target.value;
 
         setUser({
             ...user,
-            [name]:value,
-           })
+            [name]: value,
+        })
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(user);
-        
+
         try {
             const res = await axios.post("http://localhost:3000/api/auth/register", user);
-            if(res.status==201){
+           console.log(res);
+           
+            if (res.status == 201) {
+                toast.success("register successful")
+                storeTokenInLS(res.data.token)
                 setUser({
-                username: "",
-                email: "",
-                phone: "",
-                password: ""
-            });
-            navigate("/login");
+                    username: "",
+                    email: "",
+                    phone: "",
+                    password: ""
+                });
+                navigate("/");
+            }else{
+                console.log(res);
             }
         } catch (error) {
-            console.error("Registration failed:", error.response?.data || error.message);
+            console.log(error);
+            toast.error(`${error.response?.data.extraDetails || error.message}`);
         }
     };
     return (
