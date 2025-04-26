@@ -4,7 +4,7 @@ import User from '../models/user-model.js';
 const userMiddleware = async (req, res, next) => {
     //getting jwt token from frontend which was passed by header
     const token = req.header("Authorization")
-
+    
     if (!token) {
         return res.status(401).json({ msg: "unauthorized Http,Token not provided" });
     }
