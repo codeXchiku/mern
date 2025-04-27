@@ -8,6 +8,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"))
   const[user,setUser] = useState(null)
+  const authorizationToken = `Bearer ${token}`
 
   const storeTokenInLS = (jwtToken) => {
     setToken(jwtToken);
@@ -29,7 +30,7 @@ const userAuthentication = async()=>{
   try {
     const response = await axios.get("http://localhost:3000/api/auth/user", {
       headers: {
-        "Authorization": `Bearer ${token}`,
+        "Authorization": authorizationToken,
       },
     });
     setUser(response.data.userData)
@@ -47,7 +48,7 @@ useEffect(() => {
 }, [token]);
 
   return (
-    <AuthContext.Provider value={{ storeTokenInLS, logoutUser, isLoggedIn,user }}>
+    <AuthContext.Provider value={{ storeTokenInLS, logoutUser, isLoggedIn,user,authorizationToken }}>
       {children}
     </AuthContext.Provider>
   )

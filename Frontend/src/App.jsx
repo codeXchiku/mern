@@ -9,6 +9,11 @@ import Register from './pages/Register'
 import Error from './pages/Error'
 import Footer from './components/Footer'
 import Logout from './pages/Logout'
+import Service from './pages/Service'
+import AdminLayouts from './layouts/AdminLayouts'
+import AdminUsers from './pages/AdminUsers'
+import AdminContacts from './pages/AdminContacts'
+import AdminUpdate from './pages/AdminUpdate'
 
 const App = () => {
   return (
@@ -19,9 +24,18 @@ const App = () => {
       <Route path='/' element={<Home/>}/>
       <Route path='/about' element={<About/>}/>
       <Route path='/contact' element={<Contact/>}/>
+      <Route path='/service' element={<Service/>}/>
       <Route path='/login' element={<LogIn/>}/>
       <Route path='/register' element={<Register/>}/>
       <Route path='/logout' element={<Logout/>}/>
+
+      {/* for Admin layout */}
+      <Route path='/admin' element={<AdminLayouts/>}>
+      <Route path='users' element={<AdminUsers/>}/>
+      <Route path='contacts' element={<AdminContacts/>}/>
+      <Route path='users/:id/edit' element={<AdminUpdate/>}/>
+      </Route>
+
       <Route path='*' element={<Error/>}/>
      </Routes>
      <Footer/>
