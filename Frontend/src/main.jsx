@@ -6,10 +6,11 @@ import { AuthProvider } from './store/Auth.jsx'
 import{ToastContainer} from 'react-toastify'
 
 createRoot(document.getElementById('root')).render(
-  <AuthProvider>
   <StrictMode>
+  <AuthProvider>
     <App />
     <ToastContainer />
-  </StrictMode>,
   </AuthProvider>
+</StrictMode>
+
 )

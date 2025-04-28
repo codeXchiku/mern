@@ -1,7 +1,16 @@
 import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Navigate, NavLink, Outlet } from 'react-router-dom'
+import { useAuth } from '../store/Auth'
 
 const AdminLayouts = () => {
+const {user,isLoading} = useAuth()
+
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
+  if (!user.isAdmin) {
+    return <Navigate to="/" />
+  }
   return (
     <div className="admin-layout">
       {/* Admin Navigation */}
