@@ -1,5 +1,5 @@
 import React from 'react'
-import {BrowserRouter, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom"
 import Home from './pages/Home'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -18,28 +18,33 @@ import AdminUpdate from './pages/AdminUpdate'
 const App = () => {
   return (
     <>
-     <BrowserRouter>
-     <Navbar/>
-     <Routes>
-      <Route path='/' element={<Home/>}/>
-      <Route path='/about' element={<About/>}/>
-      <Route path='/contact' element={<Contact/>}/>
-      <Route path='/service' element={<Service/>}/>
-      <Route path='/login' element={<LogIn/>}/>
-      <Route path='/register' element={<Register/>}/>
-      <Route path='/logout' element={<Logout/>}/>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<>
+            <Navbar />
+            <Outlet />
+            <Footer />
+          </>}>
+            <Route path='/' element={<Home />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/service' element={<Service />} />
+            <Route path='/login' element={<LogIn />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/logout' element={<Logout />} />
+          </Route>
 
-      {/* for Admin layout */}
-      <Route path='/admin' element={<AdminLayouts/>}>
-      <Route path='users' element={<AdminUsers/>}/>
-      <Route path='contacts' element={<AdminContacts/>}/>
-      <Route path='users/:id/edit' element={<AdminUpdate/>}/>
-      </Route>
+          {/* for Admin layout */}
+          <Route path='/admin' element={<AdminLayouts />}>
+            <Route index element={<Navigate to="users" replace />} />
+            <Route path='users' element={<AdminUsers />} />
+            <Route path='contacts' element={<AdminContacts />} />
+            <Route path='users/:id/edit' element={<AdminUpdate />} />
+          </Route>
 
-      <Route path='*' element={<Error/>}/>
-     </Routes>
-     <Footer/>
-     </BrowserRouter>
+          <Route path='*' element={<Error />} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
